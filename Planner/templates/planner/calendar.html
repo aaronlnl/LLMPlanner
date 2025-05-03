@@ -1,20 +1,31 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>
-        <title>LLMPlanner</title>
+        <title>LLMPlanner Calendar</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     </head>
     <body>
-        <table border = "1">
+        <table border = "1" class="table">
             <tr>
                 {% for date in dates %}
-                    <td>{{ date }}</td>
+                    <th>{{ date }}</th>
                 {% endfor %}
             </tr>
             <tr>
-                {% for date in dates %}
-                    <td>{{ date }}</td>
+                {% for day in schedule %}
+                    <td>
+                        {% for event in day %}
+                            <div>{{ event.get_start_time.hour|stringformat:"02d" }}:{{ event.get_start_time.minute|stringformat:"02d" }} - 
+                                {{ event.get_end_time.hour|stringformat:"02d" }}:{{ event.get_end_time.minute|stringformat:"02d" }} <br />
+                                {{ event.get_description }}</div>
+                        {% endfor %}
+                    </td>
                 {% endfor %}
             </tr>
         </table>
+
+        <a href="/planner">Back</a>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
     </body>
 </html>
