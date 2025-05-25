@@ -1,9 +1,11 @@
 import json
+import os
 
 from channels.generic.websocket import WebsocketConsumer
 import google.generativeai as genai
 
-GOOGLE_API_KEY = ""
+
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 
 class ChatConsumer(WebsocketConsumer):
     def connect(self):

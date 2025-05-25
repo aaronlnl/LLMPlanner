@@ -1,0 +1,4 @@
+Django>=5.2
+channels==3.0.5
+pymysql
+google-generativeai

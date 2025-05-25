@@ -1,61 +1,57 @@
-<!DOCTYPE html>
-<html lang = "en">
-    <head>
-        <title>LLMPlanner Chat</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-    </head>
-    <body>
+{% extends "planner/layout.html" %}
 
-        <div id="messages"></div>
+{% block title %}
+    LLMPlanner Chat
+{% endblock %}
 
-        <form id="form">
-            <input type="text" name="message"/>
-        </form>
+{% block body %}
+    <div id="messages"></div>
 
-        <a href="/planner">Back</a>
-        
+    <form id="form">
+        <input type="text" name="message"/>
+    </form>
 
-        <script type="text/javascript">
-            let url = `ws://${window.location.host}/ws/socket-server/`
+    <a href="{% url 'index' %}">Back</a>
+    
 
-            const chatSocket = new WebSocket(url)
+    <script type="text/javascript">
+        let url = `ws://${window.location.host}/ws/socket-server/`
 
-            chatSocket.onmessage = function(e) {
-                let data = JSON.parse(e.data)
-                console.log("Data:", data)
-                if (data.type === "user_chat") {
-                    let messages = document.getElementById("messages")
+        const chatSocket = new WebSocket(url)
 
-                    messages.insertAdjacentHTML("beforeend", 
-                        `<div>
-                            <p>User: ${data.message}</p>
-                        </div>
-                        `
-                    )
-                }
-                if (data.type === "ai_chat") {
-                    let messages = document.getElementById("messages")
+        chatSocket.onmessage = function(e) {
+            let data = JSON.parse(e.data)
+            console.log("Data:", data)
+            if (data.type === "user_chat") {
+                let messages = document.getElementById("messages")
 
-                    messages.insertAdjacentHTML("beforeend", 
-                        `<div>
-                            <p>AI: ${data.message}</p>
-                        </div>
-                        `
-                    )
-                }
+                messages.insertAdjacentHTML("beforeend", 
+                    `<div>
+                        <p>User: ${data.message}</p>
+                    </div>
+                    `
+                )
             }
+            if (data.type === "ai_chat") {
+                let messages = document.getElementById("messages")
 
-            let form = document.getElementById("form")
-            form.addEventListener('submit', (e)=> {
-                e.preventDefault()
-                let message = e.target.message.value
-                chatSocket.send(JSON.stringify({
-                    'message':message
-                }))
-                form.reset()
-            } )
-        </script>
+                messages.insertAdjacentHTML("beforeend", 
+                    `<div>
+                        <p>AI: ${data.message}</p>
+                    </div>
+                    `
+                )
+            }
+        }
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
-    </body>
-</html>
+        let form = document.getElementById("form")
+        form.addEventListener('submit', (e)=> {
+            e.preventDefault()
+            let message = e.target.message.value
+            chatSocket.send(JSON.stringify({
+                'message':message
+            }))
+            form.reset()
+        } )
+    </script>
+{% endblock %}
