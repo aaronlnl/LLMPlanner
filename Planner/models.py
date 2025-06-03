@@ -17,10 +17,17 @@ class CalendarEvent(models.Model):
     end_date = models.DateField()
     end_time = models.TimeField()
 
+    def __str__(self):
+        return (
+            f"Event '{self.title}' for user '{self.user.username}' at '{self.location}' "
+            f"from {self.start_date} {self.start_time.strftime('%H:%M')} "
+            f"to {self.end_date} {self.end_time.strftime('%H:%M')}: {self.description}"
+        )
+
     class Meta:
         constraints = [
             CheckConstraint(
-                condition = Q(end_date__gt=F("start_date")) | (Q(end_date=F("start_date")) & Q(end_time__gt=F("start_time"))),
+                condition = Q(end_date__gt=F("start_date")) | (Q(end_date=F("start_date")) & Q(end_time__gt=F("start_time"))), # type: ignore
                 name = "event_ends_after_start"
             ),
         ]
